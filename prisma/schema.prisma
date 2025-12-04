@@ -13,3 +13,50 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Media {
+  id    Int     @id @default(autoincrement())
+  path  String
+  type  String
+  size  Int?
+  products Product[] 
+  videos   Product[] @relation("ProductVideo") 
+}
+
+model Product {
+  id              Int          @id @default(autoincrement())
+  title           String
+  price           Float
+  quantity        Int
+  shortDescription String?
+  imageId         Int?
+  image           Media?       @relation(fields: [imageId], references: [id])
+  videoId         Int?
+  video           Media?       @relation("ProductVideo", fields: [videoId], references: [id])
+  infoBlocks      InfoBlock[]
+  likes           Int?
+  productOnOrders ProductOnOrder[]
+}
+
+model InfoBlock {
+  id           Int       @id @default(autoincrement())
+  position     Int
+  header       String?
+  text         String?
+  mediaId      Int?      
+
+  productId    Int?
+  product      Product? @relation(fields: [productId], references: [id])
+
+  media        Media?   @relation(fields: [mediaId], references: [id])
+
+  techInfoList TechInfo[]
+}
+model TechInfo {
+  id       Int    @id @default(autoincrement())
+  feature  String
+  subtext  String?
+
+  infoBlockId Int?
+  infoBlock   InfoBlock? @relation(fields: [infoBlockId], references: [id])
+}

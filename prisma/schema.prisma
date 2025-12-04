@@ -20,12 +20,13 @@ model User {
   name      String
   password  String
   email     String   @unique
-  number    Int
+  number    Int ?
   surname   String
-  avatar    String
+  patromymic  String
+  avatar    String ?
 
-  adressesID Int
-  address  Adress   @relation(fields: [adressesID], references: [id])
+  adressesID Int ?
+  address  Adress   @relation(fields: [adressesID], references: [id]) 
 
 }
 
@@ -35,8 +36,8 @@ model Adress{
   city      String
   street    String
   house     String
-  entrance  Int
-  flatNumber Int
+  entrance  Int ?
+  flatNumber Int ?
   
   users     User[]
 }

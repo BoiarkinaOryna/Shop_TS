@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -59,7 +59,6 @@ model Product {
   imageId          Int?
   image            Media?           @relation(fields: [imageId], references: [id])
   infoBlocks       InfoBlock[]
-  likes            Int?
   discount         String?
   productOnOrders  ProductOnOrder[]
 }

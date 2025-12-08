@@ -6,7 +6,7 @@ export type Product = Prisma.ProductGetPayload<{}>
 
 export type ProductCreate = Prisma.ProductCreateInput 
 
-export type ProductUpdate = Prisma.ProductUpdaateInput
+export type ProductUpdate = Prisma.ProductUpdateInput
 
 export interface ShopServiceContract {
     getAll: (type: string) => Promise<Product[]>

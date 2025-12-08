@@ -10,80 +10,110 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  // url      = env("DATABASE_URL")
 }
-
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  password  String
-  email     String   @unique
-  number    Int ?
-  surname   String
-  patromymic  String
-  avatar    String ?
+  id         Int     @id @default(autoincrement())
+  name       String
+  password   String
+  email      String  @unique
+  number     String?
+  surname    String
+  patromymic String
+  avatar     String?
 
-  adressesID Int ?
-  address  Adress   @relation(fields: [adressesID], references: [id]) 
-
+  addressesID Int?
+  address    Address? @relation(fields: [addressesID], references: [id])
+  orders     Order[]
 }
 
-model Adress{
-  id        Int      @id @default(autoincrement())
-  country   String
-  city      String
-  street    String
-  house     String
-  entrance  Int ?
-  flatNumber Int ?
-  
-  users     User[]
+model Address {
+  id         Int    @id @default(autoincrement())
+  country    String
+  city       String
+  street     String
+  house      String
+  entrance   Int?
+  flatNumber Int?
+
+  users User[]
 }
+
 model Media {
-  id    Int     @id @default(autoincrement())
-  path  String
-  type  String
-  size  Int?
-  products Product[] 
-  videos   Product[] @relation("ProductVideo") 
+  id         Int         @id @default(autoincrement())
+  path       String
+  type       String
+  size       String?
+  products   Product[]
+  infoBlocks InfoBlock[]
 }
 
 model Product {
-  id              Int          @id @default(autoincrement())
-  title           String
-  price           Float
-  quantity        Int
+  id               Int              @id @default(autoincrement())
+  title            String
+  price            Float
+  quantity         Int
   shortDescription String?
-  imageId         Int?
-  image           Media?       @relation(fields: [imageId], references: [id])
-  videoId         Int?
-  video           Media?       @relation("ProductVideo", fields: [videoId], references: [id])
-  infoBlocks      InfoBlock[]
-  likes           Int?
-  productOnOrders ProductOnOrder[]
+  imageId          Int?
+  image            Media?           @relation(fields: [imageId], references: [id])
+  infoBlocks       InfoBlock[]
+  likes            Int?
+  discount         String?
+  productOnOrders  ProductOnOrder[]
 }
 
 model InfoBlock {
-  id           Int       @id @default(autoincrement())
-  position     Int
-  header       String?
-  text         String?
-  mediaId      Int?      
+  id       Int     @id @default(autoincrement())
+  position Int
+  header   String?
+  text     String?
+  mediaId  Int?
 
-  productId    Int?
-  product      Product? @relation(fields: [productId], references: [id])
-
-  media        Media?   @relation(fields: [mediaId], references: [id])
+  media Media? @relation(fields: [mediaId], references: [id])
 
   techInfoList TechInfo[]
+  product      Product?   @relation(fields: [productId], references: [id])
+  productId    Int?
 }
+
 model TechInfo {
-  id       Int    @id @default(autoincrement())
-  feature  String
-  subtext  String?
+  id      Int     @id @default(autoincrement())
+  feature String
+  subtext String?
 
   infoBlockId Int?
   infoBlock   InfoBlock? @relation(fields: [infoBlockId], references: [id])
+}
+
+model ProductOnOrder {
+  id        Int @id @default(autoincrement())
+  productId Int
+  orderId   Int
+  quantity  Int
+
+  product Product @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id])
+}
+
+model Order {
+  id       Int     @id @default(autoincrement())
+  userId   Int?
+  sum      Float
+  discount Float?
+  delivery String?
+  comment  String?
+  payment  String?
+
+  userName       String?
+  userSurname    String?
+  userPatronymic String?
+  userNumber     String?
+  userEmail      String?
+
+  deliveryAddress String?
+
+  user     User?            @relation(fields: [userId], references: [id])
+  products ProductOnOrder[]
 }

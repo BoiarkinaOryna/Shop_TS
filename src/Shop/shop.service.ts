@@ -3,8 +3,8 @@ import { ShopRepositoryContract, ProductCreate, ProductUpdate } from "./shop.typ
 
 const prisma = new PrismaClient();
 
-const ShopRepository: ShopRepositoryContract = {
-    async getAll(type?: string) {
+const ShopService: ShopRepositoryContract = {
+    async getAll(take?: string) {
         return prisma.product.findMany({
             include: {
                 image: true,
@@ -65,10 +65,15 @@ const ShopRepository: ShopRepositoryContract = {
     },
 
     async delete(id: number) {
-        return prisma.product.delete({
-            where: { id }
-        }).catch(() => null);
+        try{
+            prisma.product.delete({
+                where: { id }
+            })
+            return null
+        } catch(error){
+            throw error
+        }
     }
 };
 
-export default ShopRepository;
+export default ShopService;

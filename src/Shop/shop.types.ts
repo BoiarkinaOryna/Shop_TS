@@ -9,7 +9,7 @@ export type ProductCreate = Prisma.ProductCreateInput
 export type ProductUpdate = Prisma.ProductUpdateInput
 
 export interface ShopServiceContract {
-    getAll: (type: string) => Promise<Product[]>
+    getAll: (take: string) => Promise<Product[]>
     getById: (id: number) => Promise<Product| null> 
     create: (data: ProductCreate) => Promise<Product>
     update: (id: number, data: ProductUpdate) => Promise<Product | null>
@@ -25,7 +25,7 @@ export interface ShopControllerContract {
 }
 
 export interface ShopRepositoryContract {
-    getAll: (type: string) => Promise<Product[]>
+    getAll: (take: string) => Promise<Product[]>
     getById: (id: number) => Promise<Product| null> 
     create: (data: ProductCreate) => Promise<Product>
     update: (id: number, data: ProductUpdate) => Promise<Product | null>

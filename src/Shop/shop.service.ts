@@ -1,74 +1,45 @@
-import { PrismaClient } from "../generated/prisma";
-import { ShopRepositoryContract, ProductCreate, ProductUpdate } from "./shop.types";
+import { PrismaClient } from "../generated/prisma"
+import {
+  ShopServiceContract,
+  ProductCreate,
+  ProductUpdate,
+} from "./shop.types"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-const ShopRepository: ShopRepositoryContract = {
-    async getAll(type?: string) {
-        return prisma.product.findMany({
-            include: {
-                image: true,
-                infoBlocks: {
-                    include: {
-                        media: true,
-                        techInfoList: true
-                    }
-                }
-            }
-        });
-    },
+const ShopService: ShopServiceContract = {
+  async getAll(take: string) {
+    return prisma.product.findMany({
+      take: take,
+    })
+  },
 
-    async getById(id: number) {
-        return prisma.product.findUnique({
-            where: { id },
-            include: {
-                image: true,
-                infoBlocks: {
-                    include: {
-                        media: true,
-                        techInfoList: true
-                    }
-                }
-            }
-        });
-    },
+  async getById(id: number) {
+    return prisma.product.findUnique({
+      where: { id },
+    })
+  },
 
-    async create(data: ProductCreate) {
-        return prisma.product.create({
-            data,
-            include: {
-                image: true,
-                infoBlocks: {
-                    include: {
-                        media: true,
-                        techInfoList: true
-                    }
-                }
-            }
-        });
-    },
+  async create(data: ProductCreate) {
+    return prisma.product.create({
+      data,
+    })
+  },
 
-    async update(id: number, data: ProductUpdate) {
-        return prisma.product.update({
-            where: { id },
-            data,
-            include: {
-                image: true,
-                infoBlocks: {
-                    include: {
-                        media: true,
-                        techInfoList: true
-                    }
-                }
-            }
-        }).catch(() => null);
-    },
+  async update(id: number, data: ProductUpdate) {
+    return prisma.product.update({
+      where: { id },
+      data,
+    }).catch(() => null) 
+  },
 
-    async delete(id: number) {
-        return prisma.product.delete({
-            where: { id }
-        }).catch(() => null);
-    }
-};
+  async delete(id: number) {
+    await prisma.product.delete({
+      where: { id },
+    }).catch(() => null)
 
-export default ShopRepository;
+    return null
+  },
+}
+
+export default ShopService

@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 const ShopRepository: ShopRepositoryContract = {
     async getAll(take?: string) {
         return prisma.product.findMany({
-            take: take ? Number(take) : null,
+            take: take? +take : 16,
             include: {
                 image: true,
                 infoBlocks: {

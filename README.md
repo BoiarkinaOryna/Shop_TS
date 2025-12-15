@@ -76,7 +76,7 @@
 
 ## Опис модулів
 
-### Ендпоінти товару
+## Ендпоінти товару
 
 #### 1. **Всі товари** : Отримуємо список усіх товарів `/products`
   - Фільтрація за типом: дрони або тепловізори.
@@ -85,11 +85,22 @@
   - **200** - Знайдено товари. Повертаємо список об'єктів **ProductPreview:**<br>
   ```ts
   {
-    id: Number
-    title: String
-    price: Number
-    imageId: Number
-    discount: String
+    id: number;
+    title: string;
+    price: number;
+    imageId: number | null;
+    discount: string | null;
+  }
+  ```
+
+  #### Наприклад
+   ```ts
+  {
+    id: 1
+    title: "DJI Mini 4K"
+    price: 29 900
+    imageId: 1
+    discount: "25%"
   }
   ```
   - **400** - Некоректний запит. Якщо замість типу у qp передано незрозумілі коду символи чи їх комбінації.
@@ -110,6 +121,18 @@
     discount: string | null;
   }
   ```
+  #### Наприклад
+   ```ts
+  {
+    id: 2;
+    title:  "DJI Mini 4 Pro";
+    price: 59 800;
+    quantity: 2;
+    shortDescription:"Easy-To-Use Mini Camera Drone...";
+    imageId: 3;
+    discount: "0%";
+  }
+  ```
 
   - **400** - Некоректний запит. ID Не є числом або не було знайдено.
   - **404** - Товар не знайдено. Тобто товару з таким ID не існує.
@@ -118,7 +141,32 @@
 #### 3. **Створення товару** : Створюємо новий товар.`/product/`
   - Для цього Endpoint застосовується post запит.
   - Новий товар додається з необхідними полями, такими як назва, ціна та опис.
-  - **201** - Товар створено.
+  - **201** - Товар створено. Повертає об'єкт товару:<br> 
+  ```ts
+  {
+    id: number;
+    title: string;
+    price: number;
+    quantity: number;
+    shortDescription: string | null;
+    imageId: number | null;
+    discount: string | null;
+  }
+  ```
+  #### Наприклад
+   ```ts
+  {
+    id: 2;
+    title:  "DJI Mini 4 Pro";
+    price: 59 800;
+    quantity: 2;
+    shortDescription:"Easy-To-Use Mini Camera Drone...";
+    imageId: 3;
+    discount: "0%";
+  }
+  ```
+
+
   - **400** - Некоректний запит. Це означає, що запит не відповідає вимогам API.
   - **422** - Неможливо обробити запит. Невірно передано або перевищенно обмеження за обсягом даних.
   - **500** - Невідома помилка сервера.
@@ -127,7 +175,30 @@
 #### 4. **Оновлення товару** : Оновлюємо інформацію про товар `/products/:id` 
   -  Для цього Endpoint застосовується put запит.
   - Приймаємо об'єкт з опціональними полями товару і id.
-  - **200** - Товар успішно оновлено.
+  - **200** - Товар успішно оновлено. Повертає об'єкт товару:<br> 
+  ```ts
+  {
+    id: number;
+    title: string;
+    price: number;
+    quantity: number;
+    shortDescription: string | null;
+    imageId: number | null;
+    discount: string | null;
+  }
+  ```
+  #### Наприклад
+   ```ts
+  {
+    id: 2;
+    title:  "DJI Mini 4 Pro";
+    price: 59 800;
+    quantity: 2;
+    shortDescription:"Easy-To-Use Mini Camera Drone...";
+    imageId: 3;
+    discount: "0%";
+  }
+  ```
   - **400** - Передано неправильний формат даних.
   - **404** - Товар не знайдено.
   - **422** - Неможливо обробити запит. Наприклад, перевищення максимуму символів.
@@ -135,11 +206,132 @@
 
 #### 5. **Видалення товару** : Видаляємо твоар за його ID `/product/:id`
   - Для цього Endpoint застосовується delete запит.
+  - **200** - Товар було успішно знайдено та видалено.
   - **400** - Некоректний запит. ID Не є числом або не було знайдено.
   - **404** - Товар не знайдено. Тобто товару з таким ID не існує.
   - **500** - Невідома помилка сервера.
-  - **200** - Товар було успішно знайдено та видалено.
 
+
+### Ендпоінти користувача
+
+  #### 1. Реєстрація : Сторінка реєстрація користувача `/user/registration`
+  - Для цього Endpoint застосовується post запит. Повертає токен, у якому закодовано id користувача. Токен вичерпується за місяць.
+  - **201** - Користувача занесено до бази даних. g
+  - **400** - Неправильна структура запиту.
+  - **409** - Такого користувача (із такою поштою) вже зареєстровано.
+  - **500** - Невідома помилка сервера.
+
+  #### 2. Авторизація : Сторінка авторизації користувача `/user/authorization`
+  - Для цього Endpoint застосовується post запит.
+  - **200** - Вхд до акаунту було успішно виконано. Повертає токен, у якому закодовано id користувача. Токен вичерпується за місяць.
+  - **400** - Некоректний запит. Данні були не валідні.
+  - **500** - Невідома помилка сервера.
+  
+
+  #### 3. **Особиста інформація** : Сторінка з відображенням особистих данних `/user/:id`
+  - Для цього Endpoint застосовується get запит.
+  - **200** - Дані користувача отримано успішно.
+
+  #### Повертається об'єкти Користувача
+  ```ts
+  {
+    id: number;
+    number: string | null;
+    name: string;
+    password: string;
+    email: string;
+    surname: string;
+    patromymic: string;
+    avatar: string | null;
+    addressesID: number | null;
+  }
+  ```
+  #### Наприклад
+  ```ts
+  {
+    id: 2;
+    number: "097 756 7852";
+    name: "Микола";
+    password: "123";
+    email: "DJI@gmail.com";
+    surname: "Скрипник";
+    patromymic: "Батькович";
+    avatar: "coolavatar.png";
+    addressesID: 4;
+  }
+  ```
+  #### Замовлення
+  ```ts
+  {
+    id: number;
+    discount: number | null;
+    userId: number | null;
+    sum: number;
+    delivery: string | null;
+    comment: string | null;
+    payment: string | null;
+    userName: string | null;
+    userSurname: string | null;
+    userPatronymic: string | null;
+    userNumber: string | null;
+    userEmail: string | null;
+    deliveryAddress: string | null;
+  }
+  ```
+  #### Наприклад
+  ```ts
+  {
+    id: 65;
+    discount: 10123;
+    userId: 2;
+    sum: 56707;
+    delivery: "Оформлено";
+    comment: "Коментар до замовлення";
+    payment: "Карткою онлайн";
+    userName: "Микола";
+    userSurname: "Скрипник";
+    userPatronymic: "Батькович";
+    userNumber: "097 756 7852";
+    userEmail: "DJI@gmail.com";
+    deliveryAddress: "Відділення №1: вул. Маршала Малиновського, 114";
+  }
+  ```
+
+  #### Адреса
+   ```ts
+  {
+    id: number;
+    country: string;
+    city: string;
+    street: string;
+    house: string;
+    entrance: number | null;
+    flatNumber: number | null;
+  }
+  ```
+ 
+  #### Наприклад
+  ```ts
+  {
+    id: 2;
+    city: Ukraine;
+    street: "Вул Маршала Малиновського 114 ";
+    house: 114 ;
+    flatNumber: 23;
+    entrance: 3;
+  }
+  ```
+  
+  - **404** - (Дані/користувача)  не знайдено.
+  - **500** - Невідома помилка сервера.
+  
+  #### 4. **Контакти** `user/contacts/:id`
+  - Для цього Endpoint застосовується post запит.
+  - **200** - Повідомлення успішно надіслано.
+  - **400** - Неправильна структура запиту.
+  - **500** - Невідома помилка сервера. 
+
+  
 ---
 
 ## Стиль написання коду

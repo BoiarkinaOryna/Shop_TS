@@ -10,8 +10,8 @@ const prisma = new PrismaClient();
 
 
 const ShopRepository: ShopRepositoryContract = {
-    async getAll(take?: string) {
-        return prisma.product.findMany({
+    async getAll(take?) {
+        return await prisma.product.findMany({
             take: take? +take : 16,
             include: {
                 image: true,
@@ -27,8 +27,8 @@ const ShopRepository: ShopRepositoryContract = {
 
 
 
-    async getById(id: number) {
-        return prisma.product.findUnique({
+    async getById(id) {
+        return await prisma.product.findUnique({
             where: { id },
             include: {
                 image: true,
@@ -43,25 +43,14 @@ const ShopRepository: ShopRepositoryContract = {
     },
 
 
-    async create(data: ProductCreate) {
-        return prisma.product.create({
-            data,
-            include: {
-                image: true,
-                infoBlocks: {
-                    include: {
-                        media: true,
-                        techInfoList: true
-                    }
-                }
-            }
-        });
+    async create(data) {
+        return await prisma.product.create({data});
     },
 
 
 
-    async update(id: number, data: ProductUpdate) {
-        return prisma.product
+    async update(id, data) {
+        return await  prisma.product
             .update({
                 where: { id },
                 data,
@@ -78,7 +67,7 @@ const ShopRepository: ShopRepositoryContract = {
             .catch(() => null);
     },
 
-    async delete(id: number) {
+    async delete(id) {
         await prisma.product.delete({
             where: { id }
         });

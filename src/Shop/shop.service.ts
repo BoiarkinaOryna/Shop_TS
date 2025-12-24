@@ -1,44 +1,25 @@
-import { PrismaClient } from "../generated/prisma"
-import {
-  ShopServiceContract,
-  ProductCreate,
-  ProductUpdate,
-} from "./shop.types"
-
-const prisma = new PrismaClient()
+import ShopRepository from "./shop.repository"
+import { ShopServiceContract } from "./shop.types"
 
 const ShopService: ShopServiceContract = {
-  async getAll(take: string) {
-    return prisma.product.findMany({
-      take: +take,
-    })
+  async getAll(take) {
+    return ShopRepository.getAll(take)
   },
 
-  async getById(id: number) {
-    return prisma.product.findUnique({
-      where: { id },
-    })
+  async getById(id) {
+    return ShopRepository.getById(id)
   },
 
-  async create(data: ProductCreate) {
-    return prisma.product.create({
-      data,
-    })
+  async create(data) {
+    return ShopRepository.create(data)
   },
 
-  async update(id: number, data: ProductUpdate) {
-    return prisma.product.update({
-      where: { id },
-      data,
-    }).catch(() => null) 
+  async update(id, data) {
+    return ShopRepository.update(id, data)
   },
 
-  async delete(id: number) {
-    await prisma.product.delete({
-      where: { id },
-    }).catch(() => null)
-
-    return null
+  async delete(id) {
+    return ShopRepository.delete(id)
   },
 }
 

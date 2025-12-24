@@ -10,6 +10,10 @@ export type ProductUpdate = Prisma.ProductUpdateInput
 
 export type ProductPreview = Omit<Product, "quantity" | "shortDescription">
 
+export type infoBlock = Prisma.InfoBlockGetPayload<{}>
+export type Category = Prisma.CategoryGetPayload<{}>
+export type Media = Prisma.MediaGetPayload<{}>
+
 // Наступні типи тут тимчасово, поки нема папки замовлення
 export type Order = Prisma.OrderGetPayload<{}>
 export type Address = Prisma.AddressGetPayload<{}>
@@ -26,9 +30,9 @@ export interface ShopServiceContract {
 export interface ShopControllerContract {
    getAll: (req: Request<object, ProductPreview[] | string, object, { take?: string }>, res: Response<ProductPreview[] | string>) => Promise<void>,
    getById: (req: Request<{ id: string }, Product | string, object>, res: Response<Product | string>) => Promise<void>,
-   create: (req: Request<object, Product | string, Product >,res: Response< Product | string >)=> Promise<void>,
+   create: (req: Request<object, ProductCreate | string, ProductCreate >,res: Response< Product | string >)=> Promise<void>,
    update: (req: Request<{ id: number }, Product | string, ProductUpdate, object>, res: Response<Product | string>) => Promise<void>,
-   delete: (req: Request<{ id: number}, string, Product | string, object>, res: Response<Product | string>) => Promise<void>
+   delete: (req: Request<{ id: number}, string, string, object>, res: Response<string>) => Promise<void>
 }
 
 export interface ShopRepositoryContract {
@@ -38,6 +42,3 @@ export interface ShopRepositoryContract {
     update: (id: number, data: ProductUpdate) => Promise<Product | null>
     delete: (id: number) => Promise<null>
 }
-
-
-

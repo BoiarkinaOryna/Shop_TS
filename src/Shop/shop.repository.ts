@@ -1,17 +1,10 @@
-import { PrismaClient } from "../generated/prisma";
-import {
-    ShopRepositoryContract,
-    ProductCreate,
-    ProductUpdate
-} from "./shop.types";
-
-
-const prisma = new PrismaClient();
+import { Client } from "../prisma/client";
+import { ShopRepositoryContract } from "./shop.types";
 
 
 const ShopRepository: ShopRepositoryContract = {
     async getAll(take?) {
-        return await prisma.product.findMany({
+        return await Client.product.findMany({
             take: take? +take : 16,
             include: {
                 image: true,
@@ -28,7 +21,7 @@ const ShopRepository: ShopRepositoryContract = {
 
 
     async getById(id) {
-        return await prisma.product.findUnique({
+        return await Client.product.findUnique({
             where: { id },
             include: {
                 image: true,
@@ -39,41 +32,9 @@ const ShopRepository: ShopRepositoryContract = {
                     }
                 }
             }
-        });
-    },
-
-
-    async create(data) {
-        return await prisma.product.create({data});
-    },
-
-
-
-    async update(id, data) {
-        return await  prisma.product
-            .update({
-                where: { id },
-                data,
-                include: {
-                    image: true,
-                    infoBlocks: {
-                        include: {
-                            media: true,
-                            techInfoList: true
-                        }
-                    }
-                }
-            })
-            .catch(() => null);
-    },
-
-    async delete(id) {
-        await prisma.product.delete({
-            where: { id }
-        });
-        return null;
+        })
     }
-};
+}
 
 
 

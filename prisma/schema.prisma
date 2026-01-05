@@ -24,9 +24,9 @@ model User {
   patromymic String
   avatar     String?
 
-  addressesID Int?
-  address    Address? @relation(fields: [addressesID], references: [id])
-  orders     Order[]
+  addressID Int?
+  address   Address? @relation(fields: [addressID], references: [id])
+  orders    Order[]
 }
 
 model Address {
@@ -61,6 +61,15 @@ model Product {
   infoBlocks       InfoBlock[]
   discount         String?
   productOnOrders  ProductOnOrder[]
+  categoryId       Int
+  category         Category         @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  iconPath String
+  name     String
+  Product  Product[]
 }
 
 model InfoBlock {

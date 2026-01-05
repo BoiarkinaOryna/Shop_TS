@@ -4,4 +4,6 @@ import {  UserServiceContract } from "./user.types";
 
 
 
-// export const UserService: UserServiceContract {}
+export const UserService: UserServiceContract = {
+    login: async (body) => {
+}

@@ -1,15 +1,18 @@
+import ShopService from "./shop.service"
 import { ShopControllerContract } from "./shop.types"
 
 const ProductController: ShopControllerContract = {
   async getAll(req, res) {
-    let take: number | undefined
-
-    if (req.query.take) {
-      take = +req.query.take
-      if (isNaN(take)) {
-        res.status(400).json("Take must be a number")
-        return
-      }
+    const take: string | undefined = req.query.take
+  
+    
+    if (!take) {
+      res.status(400).json("Take is required")
+      return
+    }
+    if (isNaN(+take)) {
+      res.status(400).json("Take must be a number")
+      return
     }
 
     try {

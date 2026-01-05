@@ -7,6 +7,7 @@ app.use(express.json());
 
 app.use("/products/", ShopRouter)
 
+
 app.get("/",(req, res )=>{
     res.send("Server is running");
 });

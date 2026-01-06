@@ -1,5 +1,4 @@
-import {Request, Response } from "express"
-import { ErrorResponse, UserControllerContract } from "./user.types"
+import { UserControllerContract } from "./user.types"
 import { UserService } from "./user.service"
 
 export const UserController: UserControllerContract = {

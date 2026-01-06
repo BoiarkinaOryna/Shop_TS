@@ -28,9 +28,7 @@ export type SendEmail = {
 
 export interface UserControllerContract {
     registration: (req: Request<object, ErrorResponse | UserAuthResponse, Register>, res: Response<ErrorResponse | UserAuthResponse>) => Promise<void>,
-
     authorization: (req: Request <object,ErrorResponse | UserAuthResponse, Authorization>, res: Response<ErrorResponse | UserAuthResponse>) => Promise<void>,
-
     emailModal: (req: Request<object, string, UserEmailForm >, res: Response<string>) => Promise<void>,
     changePassword: (req: Request<object, string, UserPasswordForm>, res: Response<string>) => Promise<void>,
     getContacts: (req: Request<object, UserContacts, object>, res: Response<UserContacts | ErrorResponse>) => Promise<void>,
@@ -43,11 +41,8 @@ export interface UserControllerContract {
 }
 
 export interface UserServiceContract {
-    //
-    login(body: any): Promise<string>
-    //
     registration: (data: Register)=> Promise<string>,
-    authorization: (data:Authorization)=> Promise<string | null>,
+    authorization: (data:Authorization)=> Promise<string>,
     emailModal: (data: UserEmailForm)=> Promise<string | null>,
     changePassword: (data: UserPasswordForm)=> Promise<string | null>,
     getContactsData: (getData: number)=> Promise<UserContacts | string>,
@@ -60,8 +55,8 @@ export interface UserServiceContract {
 }
 
 export interface UserRpositoryContract {
-    registration: (data: Register) => Promise<string | null>,
-    authorization: (data: Authorization) => Promise<string | null>,
+    registration: (data: Register) => Promise<string>,
+    authorization: (data: Authorization) => Promise<string>,
     emailModal: (data: UserEmailForm) => Promise<string | null>,
     changePassword: (data: UserPasswordForm) => Promise<string | null>,
     getContactsData: (userId: number) => Promise<UserContacts | string>,
@@ -69,6 +64,6 @@ export interface UserRpositoryContract {
     getOrders: (userId: number) => Promise<Order[] | string>,
     getAddress: (userId: number) => Promise<Address[] | string>,
     updateAddress: (data: ChangeAdress) => Promise<string | null>,
-    addAddress: (data: Address) => Promise<string | null>,
+    addAddress: (data: AddAddress) => Promise<string | null>,
     sendFeddback: (data: SendEmail)=> Promise<string | null>
 }

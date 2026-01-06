@@ -10,7 +10,7 @@ export const UserController: UserControllerContract = {
                 res.status(400).json({message: 'body is required'})
                 return
             }
-            const token = await UserService.login(body)
+            const token = await UserService.authorization(body)
             res.status(200).json({token})
         } catch (error) {
             console.log(error)

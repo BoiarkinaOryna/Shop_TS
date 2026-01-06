@@ -6,6 +6,9 @@ export type User = Prisma.UserGetPayload<{}>
 export type Order = Prisma.OrderGetPayload<{}>
 export type Address = Prisma.AddressGetPayload<{}>
 
+export type UserAuthResponse = {token: string}
+export type ErrorResponse = {message: string}
+
 export type Register = Omit<User, "number" | "id" | "surname" | "patromymic" | "avatar" | "addressID">
 export type Authorization = Omit<Register, "name">
 export type UserEmailForm = {
@@ -24,11 +27,13 @@ export type SendEmail = {
 }
 
 export interface UserControllerContract {
-    registration: (req: Request<object, string, Register>, res: Response<string>) => Promise<void>,
-    authorization: (req: Request <object, string, Authorization>, res: Response<string>) => Promise<void>,
+    registration: (req: Request<object, ErrorResponse | UserAuthResponse, Register>, res: Response<ErrorResponse | UserAuthResponse>) => Promise<void>,
+
+    authorization: (req: Request <object,ErrorResponse | UserAuthResponse, Authorization>, res: Response<ErrorResponse | UserAuthResponse>) => Promise<void>,
+
     emailModal: (req: Request<object, string, UserEmailForm >, res: Response<string>) => Promise<void>,
     changePassword: (req: Request<object, string, UserPasswordForm>, res: Response<string>) => Promise<void>,
-    getContacts: (req: Request<object, UserContacts, object>, res: Response<UserContacts>) => Promise<void>,
+    getContacts: (req: Request<object, UserContacts, object>, res: Response<UserContacts | ErrorResponse>) => Promise<void>,
     updateContactsData: (req: Request<object, string, UpdateUserContacts >, res: Response<string>) => Promise<void>,
     getOrders: (req: Request<object, Order[], object>, res: Response<Order[]>) => Promise<void>,
     getAddress: (req: Request<object, Address[], object>, res: Response<Address[]>) => Promise<void>,
@@ -38,7 +43,10 @@ export interface UserControllerContract {
 }
 
 export interface UserServiceContract {
-    registration: (data: Register)=> Promise<string | null>,
+    //
+    login(body: any): Promise<string>
+    //
+    registration: (data: Register)=> Promise<string>,
     authorization: (data:Authorization)=> Promise<string | null>,
     emailModal: (data: UserEmailForm)=> Promise<string | null>,
     changePassword: (data: UserPasswordForm)=> Promise<string | null>,

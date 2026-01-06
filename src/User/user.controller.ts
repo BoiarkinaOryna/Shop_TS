@@ -1,5 +1,5 @@
 import {Request, Response } from "express"
-import { UserControllerContract } from "./user.types"
+import { ErrorResponse, UserControllerContract } from "./user.types"
 import { UserService } from "./user.service"
 
 export const UserController: UserControllerContract = {
@@ -110,7 +110,7 @@ export const UserController: UserControllerContract = {
     updateContactsData: async (req, res) => {
         try{
             const body = req.body
-            if (!body || !body.id) {
+            if (!body) {
                 res.status(400).json("User is required")
                 return
             }
@@ -163,7 +163,7 @@ export const UserController: UserControllerContract = {
     updateAddress: async (req, res) => {
         try {
             const body = req.body
-            if (!body || !body.id) {
+            if (!body) {
                 res.status(400).json("Address data is required")
                 return
             }

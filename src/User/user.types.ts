@@ -33,7 +33,7 @@ export interface UserControllerContract {
 
     emailModal: (req: Request<object, string, UserEmailForm >, res: Response<string>) => Promise<void>,
     changePassword: (req: Request<object, string, UserPasswordForm>, res: Response<string>) => Promise<void>,
-    getContacts: (req: Request<object, UserContacts, object>, res: Response<UserContacts>) => Promise<void>,
+    getContacts: (req: Request<object, UserContacts, object>, res: Response<UserContacts | ErrorResponse>) => Promise<void>,
     updateContactsData: (req: Request<object, string, UpdateUserContacts >, res: Response<string>) => Promise<void>,
     getOrders: (req: Request<object, Order[], object>, res: Response<Order[]>) => Promise<void>,
     getAddress: (req: Request<object, Address[], object>, res: Response<Address[]>) => Promise<void>,

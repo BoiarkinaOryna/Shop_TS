@@ -1,21 +1,9 @@
 import { Client } from "../prisma/client";
-import {
-  UserRpositoryContract,
-  Register,
-  Authorization,
-  UserEmailForm,
-  UserPasswordForm,
-  UpdateUserContacts,
-  ChangeAdress,
-  AddAddress,
-  SendEmail,
-} from "./user.types"
-
-const prisma = new Client()
+import { UserRpositoryContract } from "./user.types"
 
 export const UserRepository: UserRpositoryContract = {
-  async registration(data: Register) {
-    const existing = await prisma.user.findUnique({
+  async registration(data) {
+    const existing = await Client.user.findUnique({
       where: { email: data.email },
     })
 
@@ -23,15 +11,15 @@ export const UserRepository: UserRpositoryContract = {
       throw new Error("USER_EXISTS")
     }
 
-    const user = await prisma.user.create({
+    const user = await Client.user.create({
       data,
     })
 
     return String(user.id) 
   },
 
-  async authorization(data: Authorization) {
-    const user = await prisma.user.findUnique({
+  async authorization(data) {
+    const user = await Client.user.findUnique({
       where: { email: data.email },
     })
 
@@ -43,8 +31,8 @@ export const UserRepository: UserRpositoryContract = {
     return String(user.id)
   },
 
-  async emailModal({ email }: UserEmailForm) {
-    const user = await prisma.user.findUnique({
+  async emailModal({ email }) {
+    const user = await Client.user.findUnique({
       where: { email },
     })
 
@@ -54,11 +42,11 @@ export const UserRepository: UserRpositoryContract = {
     return "EMAIL_SENT"
   },
 
-  async changePassword({ password }: UserPasswordForm) {
-    const user = await prisma.user.findFirst()
+  async changePassword({ password }) {
+    const user = await Client.user.findFirst()
     if (!user) return null
 
-    await prisma.user.update({
+    await Client.user.update({
       where: { id: user.id },
       data: { password },
     })
@@ -66,12 +54,13 @@ export const UserRepository: UserRpositoryContract = {
     return "PASSWORD_CHANGED"
   },
 
-  async getContactsData(userId: number) {
-    const user = await prisma.user.findUnique({
+  async getContactsData(userId) {
+    const user = await Client.user.findUnique({
       where: { id: userId },
       select: {
         name: true,
         surname: true,
+        patromymic: true,
         email: true,
         number: true,
         avatar: true,
@@ -82,10 +71,10 @@ export const UserRepository: UserRpositoryContract = {
     return user
   },
 
-  async updateContactsData(data: UpdateUserContacts) {
+  async updateContactsData(data) {
     if (!data.email) return null
 
-    await prisma.user.update({
+    await Client.user.update({
       where: { email: data.email },
       data,
     })
@@ -93,8 +82,8 @@ export const UserRepository: UserRpositoryContract = {
     return "UPDATED"
   },
 
-  async getOrders(userId: number) {
-    const orders = await prisma.order.findMany({
+  async getOrders(userId) {
+    const orders = await Client.order.findMany({
       where: { userId },
     })
 
@@ -102,19 +91,19 @@ export const UserRepository: UserRpositoryContract = {
     return orders
   },
 
-  async getAddress(userId: number) {
-    const addresses = await prisma.address.findMany({
-      where: { userId },
+  async getAddress(userId) {
+    const addresses = await Client.address.findMany({
+      where: { id: userId },
     })
 
     if (!addresses.length) return "NO_ADDRESS"
     return addresses
   },
 
-  async updateAddress(data: ChangeAdress) {
+  async updateAddress(data) {
     if (!data.id) return null
 
-    await prisma.address.update({
+    await Client.address.update({
       where: { id: data.id },
       data,
     })
@@ -122,15 +111,15 @@ export const UserRepository: UserRpositoryContract = {
     return "ADDRESS_UPDATED"
   },
 
-  async addAddress(data: AddAddress) {
-    await prisma.address.create({
+  async addAddress(data) {
+    await Client.address.create({
       data,
     })
 
     return "ADDRESS_CREATED"
   },
 
-  async sendFeddback(data: SendEmail) {
+  async sendFeddback(data) {
 
     console.log("Feedback:", data)
     return "SENT"

@@ -20,7 +20,7 @@ export type UserPasswordForm = {
 export type UserContacts = Omit<User, "id" | "password" | "addressID" >
 export type UpdateUserContacts = Partial<UserContacts>
 export type AddAddress = Omit<Address, "id">
-export type ChangeAdress = Partial<AddAddress>
+export type ChangeAdress = Partial<AddAddress> & { "id": number }
 export type SendEmail = {
     "userEmail": string,
     "content": string

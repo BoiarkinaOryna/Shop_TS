@@ -20,8 +20,8 @@ model User {
   password   String
   email      String  @unique
   number     String?
-  surname    String
-  patromymic String
+  surname    String?
+  patromymic String?
   avatar     String?
 
   addressID Int?

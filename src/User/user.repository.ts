@@ -31,24 +31,10 @@ export const UserRepository: UserRpositoryContract = {
     return String(user.id)
   },
 
-  async emailModal({ email }) {
-    const user = await Client.user.findUnique({
-      where: { email },
-    })
-
-    if (!user) return null
-
-    
-    return "EMAIL_SENT"
-  },
-
-  async changePassword({ password }) {
-    const user = await Client.user.findFirst()
-    if (!user) return null
-
+  async changePassword(data) {
     await Client.user.update({
-      where: { id: user.id },
-      data: { password },
+      where: { id: data.userId },
+      data: { password: data.password },
     })
 
     return "PASSWORD_CHANGED"
@@ -72,14 +58,16 @@ export const UserRepository: UserRpositoryContract = {
   },
 
   async updateContactsData(data) {
-    if (!data.email) return null
-
-    await Client.user.update({
-      where: { email: data.email },
-      data,
-    })
-
-    return "UPDATED"
+    try{
+      await Client.user.update({
+        where: { id: data.id },
+        data,
+      })
+  
+      return "UPDATED"
+    } catch{
+      return "USER_NOT_FOUND"
+    }
   },
 
   async getOrders(userId) {
@@ -92,9 +80,23 @@ export const UserRepository: UserRpositoryContract = {
   },
 
   async getAddress(userId) {
-    const addresses = await Client.address.findMany({
+    const idList = await Client.user.findUnique({
       where: { id: userId },
+      select: {
+        addressID: true,
+      }
     })
+    const addresses = []
+    if (idList && idList.addressID){
+      for (let id of idList.addressID){
+        console.log("id:", id)
+        const address = await Client.address.findMany({
+          where: { id },
+        })
+        addresses.push(address)
+      }
+
+    }
 
     if (!addresses.length) return "NO_ADDRESS"
     return addresses
@@ -117,11 +119,5 @@ export const UserRepository: UserRpositoryContract = {
     })
 
     return "ADDRESS_CREATED"
-  },
-
-  async sendFeddback(data) {
-
-    console.log("Feedback:", data)
-    return "SENT"
-  },
+  }
 }

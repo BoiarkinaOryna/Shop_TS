@@ -74,7 +74,7 @@ export const UserController: UserControllerContract = {
                 res.status(400).json("password and user_code are required")
                 return
             }
-            const result = await UserService.changePassword({ password })
+            const result = await UserService.changePassword({ "userId": res.locals.userId, "password": password })
             if(!result){
                 res.status(403).json("User not found")
                 return
@@ -89,19 +89,21 @@ export const UserController: UserControllerContract = {
     getContacts: async (req, res) => {
         try {
             const userId = res.locals.userId
+            console.log(userId)
             if (!userId) {
                 res.status(401).json({ message: "Authorization required" })
                 return
             }
-            const result = await UserService.getContactsData(userId);
+            const result = await UserService.getContactsData(+userId);
 
             if (typeof result === "string") {
             res.status(404).json({ message: result })
             return
             }
-
-            res.status(204).json(result)
+            console.log(result)
+            res.status(200).json(result)
         } catch (error) {
+            console.log(error)
             res.status(500).json({ message: "server error" })
         }
     },
@@ -114,13 +116,12 @@ export const UserController: UserControllerContract = {
                 return
             }
             const result = await UserService.updateContactsData(body)
-            if(!result){
+            if(result == "USER_NOT_FOUND"){
                 res.status(404).json("User not found")
                 return
             }
             res.status(200).json("Contacts updated")
         } catch (error) {
-
             res.status(500).json("server error")
         }
     },
@@ -128,31 +129,32 @@ export const UserController: UserControllerContract = {
     getOrders: async (req, res) => {
         try {
             const userId = res.locals.userId
-            const orders = await UserService.getOrders(userId)
-            
+            console.log(userId)
+            const orders = await UserService.getOrders(+userId)
             if (typeof orders === 'string') {
                 res.status(404).json([])
                 return
             }
             
-            res.status(204).json(orders)
+            res.status(200).json(orders)
+            console.log(orders)
         } catch (error) {
             console.log(error)
-            res.status(500).json([])
+            res.status(500).json("server error")
         }
     },
 
     getAddress: async (req, res) => {
     try {
       const userId = res.locals.userId
-      const addresses = await UserService.getAddress(userId)
+      const addresses = await UserService.getAddress(+userId)
 
       if (typeof addresses === "string") {
         res.status(404).json([])
         return
       }
 
-      res.status(204).json(addresses)
+      res.status(200).json(addresses)
     } catch (error) {
       console.log(error)
       res.status(500).json([])

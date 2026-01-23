@@ -452,28 +452,32 @@
   - **204** - Адреса користувача отримано успішно.
   #### Адреса
   ```ts
-  {
-    id: number;
-    country: string;
-    city: string;
-    street: string;
-    house: string;
-    entrance: number | null;
-    flatNumber: number | null;
-  }
+  [
+    {
+      id: number;
+      country: string;
+      city: string;
+      street: string;
+      house: string;
+      entrance: number | null;
+      flatNumber: number | null;
+    }
+  ]
   ```
  
   #### Наприклад
   ```ts
-  {
-    id: 2;
-    country: "Ukraine";
-    city: "Dnipro"
-    street: "Вул Маршала Малиновського 114 ";
-    house: 114 ;
-    flatNumber: 23;
-    entrance: 3;
-  }
+  [
+    {
+      id: 2;
+      country: "Ukraine";
+      city: "Dnipro";
+      street: "Вул Маршала Малиновського 114 ";
+      house: 114 ;
+      flatNumber: 23;
+      entrance: 3;
+    }
+  ]
   ```
   - **404** - Дані не знайдено.
   - **500** - Невідома помилка сервера.
@@ -497,7 +501,7 @@
   ```ts
   {
     id: 2;
-    city: "Lviv"
+    city: "Lviv";
     flatNumber: 28;
     entrance: 6;
   }
@@ -525,9 +529,9 @@
   ```ts
   {
     country: "Ukraine";
-    city: "Dnipro"
+    city: "Dnipro";
     street: "Вул Маршала Малиновського 114 ";
-    house: 114 ;
+    house: "114" ;
     flatNumber: 23;
     entrance: 3;
   }

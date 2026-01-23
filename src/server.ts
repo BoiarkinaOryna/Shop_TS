@@ -1,11 +1,16 @@
 import express from "express"
-import { ShopRouter } from "./Shop/shop.router";
+import { ShopRouter } from "./Shop/shop.router"
+import { UserRouter } from "./User/user.routes"
+import { logMiddleware } from "./middlewares/log.middleware";
 
 const app = express();
 
 app.use(express.json());
 
+app.use(logMiddleware)
+
 app.use("/products/", ShopRouter)
+app.use("/user/", UserRouter)
 
 
 app.get("/",(req, res )=>{
@@ -18,3 +23,25 @@ app.listen(PORT, HOST, () => {
     console.log(`Server started on http://${HOST}:${PORT}`)
 })
 
+// Щоб було, що швидко вставити
+// {
+//     "name": "kita",
+//     "email": "kitagodovanyj@gmail.com",
+//     "password": "1234"
+// }
+
+// {
+//   "id": 2,
+//   "city": "Lviv",
+//   "flatNumber": 28,
+//   "entrance": 6
+// }
+
+// {
+//     "country": "Ukraine",
+//     "city": "Dnipro",
+//     "street": "Вул Маршала Малиновського 114 ",
+//     "house": "114",
+//     "flatNumber": 23,
+//     "entrance": 3
+// }

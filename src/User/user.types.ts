@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 import { Prisma } from '../generated/prisma'
 
 
+export type changePasswordCode = {
+    "code": string,
+    "userId": number
+}
+
 export type User = Prisma.UserGetPayload<{}>
 export type Order = Prisma.OrderGetPayload<{}>
 export type Address = Prisma.AddressGetPayload<{}>
@@ -15,10 +20,11 @@ export type UserEmailForm = {
     "email": string
 }
 export type UserPasswordForm = {
+    "userId": number,
     "password": string
 }
 export type UserContacts = Omit<User, "id" | "password" | "addressID" >
-export type UpdateUserContacts = Partial<UserContacts>
+export type UpdateUserContacts = Partial<UserContacts> & { "id": number }
 export type AddAddress = Omit<Address, "id">
 export type ChangeAdress = Partial<AddAddress> & { "id": number }
 export type SendEmail = {
@@ -33,8 +39,8 @@ export interface UserControllerContract {
     changePassword: (req: Request<object, string, UserPasswordForm>, res: Response<string>) => Promise<void>,
     getContacts: (req: Request<object, UserContacts, object>, res: Response<UserContacts | ErrorResponse>) => Promise<void>,
     updateContactsData: (req: Request<object, string, UpdateUserContacts >, res: Response<string>) => Promise<void>,
-    getOrders: (req: Request<object, Order[], object>, res: Response<Order[]>) => Promise<void>,
-    getAddress: (req: Request<object, Address[], object>, res: Response<Address[]>) => Promise<void>,
+    getOrders: (req: Request<object, Order[], object>, res: Response<Order[] | string>) => Promise<void>,
+    getAddress: (req: Request<object, Address[], object>, res: Response<Address[] | string>) => Promise<void>,
     updateAddress: (req: Request<object, string, ChangeAdress>, res: Response<string>) => Promise<void>,
     addAddress: (req: Request<object, string, AddAddress>, res: Response<string>) => Promise<void>,
     sendFedback: (req: Request<object, string, SendEmail>, res: Response<string>) => Promise<void>,
@@ -43,7 +49,7 @@ export interface UserControllerContract {
 export interface UserServiceContract {
     registration: (data: Register)=> Promise<string>,
     authorization: (data:Authorization)=> Promise<string>,
-    emailModal: (data: UserEmailForm)=> Promise<string | null>,
+    emailModal: (data: UserEmailForm)=> Promise<string>,
     changePassword: (data: UserPasswordForm)=> Promise<string | null>,
     getContactsData: (getData: number)=> Promise<UserContacts | string>,
     updateContactsData: (data: UpdateUserContacts)=> Promise<string | null>,
@@ -51,13 +57,12 @@ export interface UserServiceContract {
     getAddress: (getData: number)=> Promise<Address[] | string>,
     updateAddress: (data: ChangeAdress)=>Promise<string | null>
     addAddress: (data: AddAddress )=> Promise<string | null>,
-    sendFeddback: (data: SendEmail) => Promise<string | null>
+    sendFeddback: (data: SendEmail) => Promise<string>
 }
 
 export interface UserRpositoryContract {
     registration: (data: Register) => Promise<string>,
     authorization: (data: Authorization) => Promise<string>,
-    emailModal: (data: UserEmailForm) => Promise<string | null>,
     changePassword: (data: UserPasswordForm) => Promise<string | null>,
     getContactsData: (userId: number) => Promise<UserContacts | string>,
     updateContactsData: (data: UpdateUserContacts) => Promise<string | null>,
@@ -65,5 +70,4 @@ export interface UserRpositoryContract {
     getAddress: (userId: number) => Promise<Address[] | string>,
     updateAddress: (data: ChangeAdress) => Promise<string | null>,
     addAddress: (data: AddAddress) => Promise<string | null>,
-    sendFeddback: (data: SendEmail)=> Promise<string | null>
 }

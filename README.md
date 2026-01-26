@@ -170,67 +170,39 @@
 
  ### 3. **Головна сторінка** : Головнаа сторінка з популярними або новими товарам `/products/suggestions`
   - Для цього Endpoint застосовується get запит.
-  - **popular** - bolean(True, Folse) - Отримання товару за кількість зкамовлень у нього 
-  - **new** - bolean(True, Folse) - Отримаання товару за час його існування 
+  - **type** - string - критерії сортування товарів:
+  1. **popular** (Отримання товару за кількість зкамовлень у нього )
+  2. **new** - bolean(True, Folse) - Отримаання товару за час його існування 
   - **limit** - number(1) - Кількість товарів 
   - **offset** - number(2) - Пагінація 
-  - **200** - На сторінку успішно виведені популярні та нові товари.
+  - **200** - Надіслано популярні або нові товари.
   ```ts
   [
     {
-      new: [
-        {
-          id: number;
-          title: string;
-          price: number;
-          imageId: number | null;
-          discount: string | null;
-          shortDescription: string | null
-        }
-      ],
-      popular: [
-        {
-          id: number;
-          title: string;
-          price: number;
-          imageId: number | null;
-          discount: string | null;
-          shortDescription: string | null
-        }
-      ]
-      
-    } 
+      id: number;
+      title: string;
+      price: number;
+      imageId: number | null;
+      discount: string | null;
+      shortDescription: string | null
+    }
   ]
   ```
   ### Приклад
   ```ts
   [
     {
-      new: [
-        {
-          id: 134543;
-          title: "DJI Mini 4K Pro 100500";
-          price: 120 000;
-          imageId: 18956;
-          discount: "+25%";
-          shortDescription: "Нова модель";
-        }
-      ],
-      popular: [
-        {
-          id: 1;
-          title: "DJI Mini 4K";
-          price: 29 900;
-          imageId: 1;
-          discount: "25%";
-          shortDescription: "Дрон имба";
-        }
-      ]
-      
-    } 
+      id: 1;
+      title: "DJI Mini 4K";
+      price: 29 900;
+      imageId: 1;
+      discount: "25%";
+      shortDescription: "Дрон супер";
+    }
   ]
   ```
   - **400** - Некоректний запит. Якщо замість типу у query parameter передано незрозумілі коду символи чи їх комбінації.
+  - **404** - Товари не знайдено.
   - **500** - Невідома помилка сервера.
 
 

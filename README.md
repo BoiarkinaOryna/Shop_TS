@@ -293,7 +293,7 @@
   #### Наприклад
   ```ts
   {
-    email:"123q@gmail.com";
+    email: "123q@gmail.com";
   }
   ```
   - **200** - Успішно надісло валідні дані і користувач має отримати лист з посиланням на сторінку зміни пароля.
@@ -307,13 +307,15 @@
   - #### Відсилаємо ми об'єкт з новим паролем:
   ```ts
   {
-    password: string
+    password: string,
+    email: string
   }
   ```
   #### Наприклад
   ```ts
   {
-    password:"Lebronjames1991"
+    password: "Lebronjames1991"
+    email: "123q@gmail.com"
   }
   ```
   - Пароль користувача використовуеться для авторизації та захисту його облікового запису
@@ -334,7 +336,7 @@
     name: string;
     email: string;
     surname: string;
-    patromymic: string;
+    patronymic: string;
     avatar: string | null;
   }
   ```
@@ -343,7 +345,7 @@
   {
     surname: "Скрипник";
     name: "Микола";
-    patromymic: "Батькович";
+    patronymic: "Батькович";
     number: "097 756 7852";
     email: "DJI@gmail.com";
     avatar: "coolavatar.png";
@@ -359,22 +361,20 @@
   #### Оновлені контактні дані користувача
   ```ts
   {
-    id: number;
     number?: string | null;
     name?: string;
     email?: string;
     surname?: string;
-    patromymic?: string;
+    patronymic?: string;
     avatar?: string | null;
   }
   ``` 
   #### Наприклад
   ```ts
   {
-    id: 2;
-    surname: "Крипник";
+    surname: "Скрипник";
     name: "Микола";
-    patromymic: "Батькович";
+    patronymic: "Батькович";
     email: "DJI007@gmail.com";
   }
   ```
@@ -417,7 +417,7 @@
       sum: 56707;
       delivery: "Оформлено";
       comment: "Коментар до замовлення";
-      payment: "Карткою онлайн";
+      payment: "Оформлено";
       userName: "Микола";
       userSurname: "Скрипник";
       userPatronymic: "Батькович";
@@ -547,6 +547,13 @@
   {
     userEmail: string,
     content: string
+  }
+  ```
+  #### Наприклад
+  ```ts
+  {
+    userEmail: "DJI@gmail.com",
+    content: "Гарний сайт"
   }
   ```
   - **200** - Повідомлення успішно надіслано. Повертаємо рядок з повідомленням про успішне виконання.

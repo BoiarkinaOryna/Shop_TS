@@ -2,6 +2,28 @@ import { UserControllerContract } from "./user.types"
 import { UserService } from "./user.service"
 
 export const UserController: UserControllerContract = {
+    registration: async (req, res) => {
+        try {
+            let body = req.body
+
+            if (!body){
+                res.status(400).json({ message: 'body is required' })
+                return
+            }
+            await UserService.registration(body)
+            res.status(201).json()
+        } catch (error) {
+            console.log(error)
+            if(error instanceof Error){
+                switch (error.message) {
+                    case "USER_EXISTS":
+                        res.status(401).json({message: 'user exists'})
+                        return
+                    }
+                }
+            res.status(500).json({message: 'server error'})
+        }
+    },
     authorization: async(req, res) => {
          try {
             let body = req.body
@@ -19,32 +41,10 @@ export const UserController: UserControllerContract = {
                     case "NOT_FOUND":
                         res.status(401).json({message: 'wrong credentials'})
                         return
-                    case "WRONG_CREDENTIALS":
-                        res.status(401).json({message: 'wrong credentials'})
+                    case "WRONG_PASSWORD":
+                        res.status(401).json({message: 'wrong password'})
                 }
             }   
-            res.status(500).json({message: 'server error'})
-        }
-    },
-    registration: async (req, res) => {
-        try {
-            let body = req.body
-
-            if (!body){
-                res.status(400).json({ message: 'body is required' })
-                return
-            }
-            const token = await UserService.registration(body)
-            res.status(200).json({token})
-        } catch (error) {
-            console.log(error)
-            if(error instanceof Error){
-                switch (error.message) {
-                    case "USER_EXISTS":
-                        res.status(401).json({message: 'wrong credentials'})
-                        return
-                    }
-                }
             res.status(500).json({message: 'server error'})
         }
     },
@@ -56,8 +56,9 @@ export const UserController: UserControllerContract = {
                 res.status(400).json("email is required")
                 return
             }
-
-            await UserService.emailModal({ email })
+            const userId = res.locals.userId
+            console.log("userId:", userId)
+            await UserService.emailModal({ email }, +res.locals.userId)
 
             res.status(200).json("email sent")
         } catch (error) {
@@ -69,12 +70,13 @@ export const UserController: UserControllerContract = {
     changePassword: async (req, res) => {
         try {
             const { password } = req.body
-            const user_code = req.query
-            if (!password || !user_code) {
-                res.status(400).json("password and user_code are required")
+            const userCode = req.query.user_code
+            console.log("userCode:", userCode)
+            if (!password || !userCode) {
+                res.status(400).json("password and user code are required")
                 return
             }
-            const result = await UserService.changePassword({ "userId": res.locals.userId, "password": password })
+            const result = await UserService.changePassword({ "userId": +res.locals.userId, "password": password }, String(userCode))
             if(!result){
                 res.status(403).json("User not found")
                 return
@@ -82,6 +84,12 @@ export const UserController: UserControllerContract = {
             res.status(200).json("Password changed")
         } catch (error) {
             console.log(error)
+            if(error instanceof Error){
+                switch (error.message) {
+                    case "INVALID_CODE":
+                        res.status(403).json("This user code does not exist")
+                }
+            }
             res.status(500).json("server error")
         }
     },
@@ -111,12 +119,15 @@ export const UserController: UserControllerContract = {
     updateContactsData: async (req, res) => {
         try{
             const body = req.body
+            console.log("body:", body)
             if (!body) {
-                res.status(400).json("User is required")
+                res.status(400).json("Body is required")
                 return
             }
-            const result = await UserService.updateContactsData(body)
-            if(result == "USER_NOT_FOUND"){
+            const id = res.locals.userId
+            console.log("id:", id)
+            const result = await UserService.updateContactsData(body, +id)
+            if (result == "USER_NOT_FOUND"){
                 res.status(404).json("User not found")
                 return
             }
@@ -208,6 +219,7 @@ export const UserController: UserControllerContract = {
                 return
             }   
             const result = await UserService.sendFeddback(body)
+            console.log("result:", result)
             if(!result){
                 res.status(500).json("Failed to send feedback")
                 return

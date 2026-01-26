@@ -21,7 +21,7 @@ model User {
   email      String  @unique
   number     String?
   surname    String?
-  patromymic String?
+  patronymic String?
   avatar     String?
 
   addressID Int?

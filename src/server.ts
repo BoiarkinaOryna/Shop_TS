@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from "express"
 import { ShopRouter } from "./Shop/shop.router"
 import { UserRouter } from "./User/user.routes"
@@ -22,26 +23,3 @@ const HOST: string = 'localhost'
 app.listen(PORT, HOST, () => {
     console.log(`Server started on http://${HOST}:${PORT}`)
 })
-
-// Щоб було, що швидко вставити
-// {
-//     "name": "kita",
-//     "email": "kitagodovanyj@gmail.com",
-//     "password": "1234"
-// }
-
-// {
-//   "id": 2,
-//   "city": "Lviv",
-//   "flatNumber": 28,
-//   "entrance": 6
-// }
-
-// {
-//     "country": "Ukraine",
-//     "city": "Dnipro",
-//     "street": "Вул Маршала Малиновського 114 ",
-//     "house": "114",
-//     "flatNumber": 23,
-//     "entrance": 3
-// }

@@ -6,7 +6,6 @@ export const UserRepository: UserRpositoryContract = {
     const existing = await Client.user.findUnique({
       where: { email: data.email },
     })
-
     if (existing) {
       throw new Error("USER_EXISTS")
     }
@@ -25,7 +24,7 @@ export const UserRepository: UserRpositoryContract = {
 
     if (!user) throw new Error("NOT_FOUND")
     if (user.password !== data.password) {
-      throw new Error("WRONG_CREDENTIALS")
+      throw new Error("WRONG_PASSWORD")
     }
 
     return String(user.id)
@@ -46,7 +45,7 @@ export const UserRepository: UserRpositoryContract = {
       select: {
         name: true,
         surname: true,
-        patromymic: true,
+        patronymic: true,
         email: true,
         number: true,
         avatar: true,
@@ -57,17 +56,17 @@ export const UserRepository: UserRpositoryContract = {
     return user
   },
 
-  async updateContactsData(data) {
-    try{
+  async updateContactsData(data, id) {
+    // try{
       await Client.user.update({
-        where: { id: data.id },
+        where: { id },
         data,
       })
   
       return "UPDATED"
-    } catch{
-      return "USER_NOT_FOUND"
-    }
+    // } catch{
+    //   return "USER_NOT_FOUND"
+    // }
   },
 
   async getOrders(userId) {
@@ -86,30 +85,34 @@ export const UserRepository: UserRpositoryContract = {
         addressID: true,
       }
     })
-    const addresses = []
-    if (idList && idList.addressID){
-      for (let id of idList.addressID){
-        console.log("id:", id)
-        const address = await Client.address.findMany({
-          where: { id },
-        })
-        addresses.push(address)
-      }
+    // console.log(idList)
+    // const addresses = []
+    // if (idList && idList.addressID){
+    //   for (let id of idList.addressID){
+    //     console.log("id:", id)
+    //     const address = await Client.address.findMany({
+    //       where: { id },
+    //     })
+    //     addresses.push(address)
+    //   }
 
-    }
+    // }
 
-    if (!addresses.length) return "NO_ADDRESS"
-    return addresses
+    // if (!addresses.length) return "NO_ADDRESS"
+    // return addresses
+    return ""
   },
 
   async updateAddress(data) {
+    console.log("data:", data)
     if (!data.id) return null
 
-    await Client.address.update({
-      where: { id: data.id },
-      data,
-    })
+    const { id, ...updateData } = data;
 
+    await Client.address.update({
+      where: { id },
+      data: updateData,
+    });
     return "ADDRESS_UPDATED"
   },
 

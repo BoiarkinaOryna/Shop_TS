@@ -1,20 +1,19 @@
 import { HomeRepository } from './home.repository';
+import { HomeServiceContract } from './home.types';
 
-export class HomeService {
-  private homeRepository = new HomeRepository();
+const HomeService: HomeServiceContract = {
+  async getSuggestions {
+    const { type, limit, offset } = params
 
-  async getSuggestions(params: { type: string, limit: number, offset: number }) {
-    const { type, limit, offset } = params;
-
-    if (type === 'popular') {
-      return this.homeRepository.getPopularProducts(limit, offset);
+    if (type ==='popular') {
+      return HomeRepository.getPopularProducts(limit, offset)
     }
 
     if (type === 'new') {
-      return this.homeRepository.getNewestProducts(limit, offset);
+      return HomeRepository.getNewestProducts(limit, offset)
     }
-
-    // По умолчанию можно вернуть пустой массив или общий список
-    return [];
+    return []
   }
 }
+
+export default HomeService

@@ -1,5 +1,5 @@
 import express from "express"
-import { ShopRouter } from "./Shop/shop.router";
+import ShopRouter from "./Shop/shop.router";
 import HomeRouter from "./Home/home.router";
 
 const app = express();

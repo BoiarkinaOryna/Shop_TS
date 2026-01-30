@@ -1,25 +1,25 @@
-import { PrismaClient } from '@prisma/client';
+import { Client } from "../prisma/client";
+import { HomeRepositoryContract } from "./home.types";
 
-const prisma = new PrismaClient();
-
-export class HomeRepository {
-  async getPopularProducts(limit: number, offset: number) {
-    return prisma.product.findMany({
+const HomeRepository: HomeRepositoryContract = {
+  async getPopularProducts {
+    return Client.product.findMany({
       take: limit,
       skip: offset,
       orderBy: {
-        ordersCount: 'desc' // Предполагаемое поле для популярности
+        id: 'desc'
       }
-    });
-  }
-
-  async getNewestProducts(limit: number, offset: number) {
-    return prisma.product.findMany({
+    })
+  },
+  async getNewestProducts {
+    return Client.product.findMany({
       take: limit,
       skip: offset,
       orderBy: {
-        createdAt: 'desc'
+        id: 'desc'
       }
-    });
+    })
   }
 }
+
+export default HomeRepository

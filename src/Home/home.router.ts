@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { HomeController } from './home.controller';
+import express from 'express';
+import HomeController from "./home.controller";
 
-const HomeRouter = Router();
-const homeController = new HomeController();
 
-HomeRouter.get('/suggestions', homeController.getSuggestions);
+const HomeRouter: express.Router = express.Router()
 
-export default HomeRouter;
+HomeRouter.get('/suggestions', HomeController.getSuggestions)
+
+export default HomeRouter

@@ -5,10 +5,7 @@ const HomeRepository: HomeRepositoryContract = {
   async getPopularProducts {
     return Client.product.findMany({
       take: limit,
-      skip: offset,
-      orderBy: {
-        id: 'desc'
-      }
+      skip: offset
     })
   },
   async getNewestProducts {

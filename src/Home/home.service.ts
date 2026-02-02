@@ -1,19 +1,15 @@
-import { HomeRepository } from './home.repository';
-import { HomeServiceContract } from './home.types';
+import { HomeServiceContract, SuggestionParams, Product } from './home.types';
+import HomeRepository from './home.repository';
 
 const HomeService: HomeServiceContract = {
-  async getSuggestions {
-    const { type, limit, offset } = params
+  async getSuggestions(params: SuggestionParams): Promise<Product[]> {
+    const { type, limit, offset } = params;
 
-    if (type ==='popular') {
-      return HomeRepository.getPopularProducts(limit, offset)
-    }
+    if (type === 'popular') return HomeRepository.getPopularProducts(limit, offset);
+    if (type === 'new') return HomeRepository.getNewestProducts(limit, offset);
 
-    if (type === 'new') {
-      return HomeRepository.getNewestProducts(limit, offset)
-    }
-    return []
-  }
-}
+    return [];
+  },
+};
 
-export default HomeService
+export default HomeService;

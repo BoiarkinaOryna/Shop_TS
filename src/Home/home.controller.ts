@@ -1,37 +1,34 @@
-import { HomeControllerContract } from "./home.types";
+import { Request, Response } from 'express';
+import HomeService from './home.service';
+import { HomeControllerContract } from './home.types';
 
 const HomeController: HomeControllerContract = {
-  async getSuggestions {
+  async getSuggestions(req: Request, res: Response) {
     try {
-      // Извлекаем параметры и приводим к нужным типам
-      const { 
-        type, // 'popular' | 'new'
-        limit = '12', 
-        page = '1' 
-      } = req.query;
+      const type = (req.query.type as string) || '';
+      const limit = Number(req.query.limit ?? 12);
+      const page = Number(req.query.page ?? 1);
 
-      if (type !== "popular" && type !== "new"){
-        res.status(400).json("Type must be either 'new or 'popular")
-        return
-      }
-      if (isNaN(+limit) || isNaN(+page)){
-        res.status(400).json("Limit and page must be numbers")
-        return
+      if (!['popular', 'new'].includes(type)) {
+        return res.status(400).send("Type must be either 'popular' or 'new'");
       }
 
-      const suggestions = await this.H.getSuggestions({
-        type: String(type),
-        limit: Number(limit),
-        offset: (Number(page) - 1) * Number(limit)
+      if (isNaN(limit) || isNaN(page)) {
+        return res.status(400).send('Limit and page must be numbers');
+      }
+
+      const suggestions = await HomeService.getSuggestions({
+        type: type as 'popular' | 'new',
+        limit,
+        offset: (page - 1) * limit,
       });
-      if (!suggestions){
-        res.status(404). json("No products found")
-      }
-      res.json(suggestions);
-    } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  }
-}
 
-export default HomeController
+      return res.json(suggestions);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Internal server error');
+    }
+  },
+};
+
+export default HomeController;

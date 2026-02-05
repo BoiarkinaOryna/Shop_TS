@@ -1,5 +1,5 @@
 import ShopService from "./shop.service"
-import { ShopControllerContract } from "./shop.types"
+import { ProductCreate, ShopControllerContract } from "./shop.types"
 
 const ProductController: ShopControllerContract = {
   async getAll(req, res) {
@@ -41,7 +41,7 @@ const ProductController: ShopControllerContract = {
     } catch (error) {
       res.status(500).json("Error fetching product")
     }
-  }
+  },
 }
 
 export default ProductController

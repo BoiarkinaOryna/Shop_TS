@@ -1,5 +1,5 @@
 import {Request, Response} from 'express'
-import type { Prisma } from '../generated/prisma/client'
+import type { Prisma } from '../generated/prisma'
 
 
 export type Product = Prisma.ProductGetPayload<{}>

@@ -1,5 +1,5 @@
 import { Client } from "../prisma/client";
-import { ShopRepositoryContract } from "./shop.types";
+import { ProductCreate, ShopRepositoryContract } from "./shop.types";
 
 
 const ShopRepository: ShopRepositoryContract = {
@@ -33,7 +33,7 @@ const ShopRepository: ShopRepositoryContract = {
                 }
             }
         })
-    }
+    },
 }
 
 

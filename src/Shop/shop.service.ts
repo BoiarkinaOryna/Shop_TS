@@ -1,5 +1,5 @@
 import ShopRepository from "./shop.repository"
-import { ShopServiceContract } from "./shop.types"
+import { ProductCreate, ShopServiceContract } from "./shop.types"
 
 const ShopService: ShopServiceContract = {
   async getAll(take) {
@@ -8,7 +8,7 @@ const ShopService: ShopServiceContract = {
 
   async getById(id) {
     return ShopRepository.getById(id)
-  }
+  },
 }
 
 export default ShopService

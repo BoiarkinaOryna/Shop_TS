@@ -1,4 +1,5 @@
-import { HomeRepositoryContract, Product, Client } from './home.types';
+import { HomeRepositoryContract } from './home.types';
+import { Client } from "../prisma/client";
 
 const HomeRepository: HomeRepositoryContract = {
   async getPopularProducts(limit, offset) {

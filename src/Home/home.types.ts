@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { PrismaClient, Product as PrismaProductType } from '@prisma/client';
+import { Prisma } from '../generated/prisma/client';
 
-export const Client = new PrismaClient();
 
-export type Product = Omit<PrismaProductType, 'quantity'>;
+export type Product = Omit<Prisma.ProductGetPayload<{}>, "quantity">
 
 export interface SuggestionParams {
   type: 'popular' | 'new';
@@ -12,7 +11,7 @@ export interface SuggestionParams {
 }
 
 export interface HomeControllerContract {
-  getSuggestions: (req: Request, res: Response) => Promise<void>;
+    getSuggestions: (req: Request<object, Product[] | string, object, SuggestionParams>, res: Response<Product[] | string>) => Promise<void>
 }
 
 export interface HomeServiceContract {

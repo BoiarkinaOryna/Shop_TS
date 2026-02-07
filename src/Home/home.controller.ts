@@ -1,20 +1,21 @@
-import { Request, Response } from 'express';
 import HomeService from './home.service';
 import { HomeControllerContract } from './home.types';
 
 const HomeController: HomeControllerContract = {
-  async getSuggestions(req: Request, res: Response) {
+  async getSuggestions(req, res) {
     try {
       const type = (req.query.type as string) || '';
       const limit = Number(req.query.limit ?? 12);
-      const page = Number(req.query.page ?? 1);
+      const page = Number(req.query.offset ?? 1);
 
       if (!['popular', 'new'].includes(type)) {
-        return res.status(400).send("Type must be either 'popular' or 'new'");
+        res.status(400).send("Type must be either 'popular' or 'new'");
+        return
       }
 
       if (isNaN(limit) || isNaN(page)) {
-        return res.status(400).send('Limit and page must be numbers');
+        res.status(400).send('Limit and page must be numbers');
+        return
       }
 
       const suggestions = await HomeService.getSuggestions({
@@ -23,10 +24,12 @@ const HomeController: HomeControllerContract = {
         offset: (page - 1) * limit,
       });
 
-      return res.json(suggestions);
+      res.json(suggestions);
+      return
     } catch (error) {
       console.error(error);
-      return res.status(500).send('Internal server error');
+      res.status(500).send('Internal server error');
+      return
     }
   },
 };

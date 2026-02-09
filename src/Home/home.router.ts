@@ -3,6 +3,6 @@ import HomeController from './home.controller';
 
 const HomeRouter = express.Router();
 
-HomeRouter.get('/suggestions', HomeController.getSuggestions);
+HomeRouter.get('/', HomeController.getSuggestions);
 
 export default HomeRouter;

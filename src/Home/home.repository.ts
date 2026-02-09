@@ -1,22 +1,41 @@
+import { HomeRepositoryContract } from './home.types';
 import { Client } from "../prisma/client";
-import { HomeRepositoryContract } from "./home.types";
 
 const HomeRepository: HomeRepositoryContract = {
-  async getPopularProducts {
-    return Client.product.findMany({
-      take: limit,
-      skip: offset
-    })
-  },
-  async getNewestProducts {
+  async getPopularProducts(limit, offset) {
+
     return Client.product.findMany({
       take: limit,
       skip: offset,
-      orderBy: {
-        id: 'desc'
-      }
-    })
-  }
-}
+      orderBy: { productOnOrders: { _count: 'desc' } }, 
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        shortDescription: true,
+        imageId: true,
+        discount: true,
+        categoryId: true,
+      },
+    });
+  },
 
-export default HomeRepository
+  async getNewestProducts(limit, offset) {
+    return Client.product.findMany({
+      take: limit,
+      skip: offset,
+      orderBy: { id: 'desc' }, 
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        shortDescription: true,
+        imageId: true,
+        discount: true,
+        categoryId: true,
+      },
+    });
+  },
+};
+
+export default HomeRepository;

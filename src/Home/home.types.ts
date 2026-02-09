@@ -1,13 +1,13 @@
-import {Request, Response} from 'express'
+import { Request, Response } from 'express';
 import { Prisma } from '../generated/prisma/client';
 
 
 export type Product = Omit<Prisma.ProductGetPayload<{}>, "quantity">
 
 export interface SuggestionParams {
-    type: string;
-    limit: number;
-    offset: number;
+  type: 'popular' | 'new';
+  limit: number;
+  offset: number;
 }
 
 export interface HomeControllerContract {
@@ -15,10 +15,10 @@ export interface HomeControllerContract {
 }
 
 export interface HomeServiceContract {
-    getSuggestions: (params: SuggestionParams) => Promise<Product[]>
+  getSuggestions: (params: SuggestionParams) => Promise<Product[]>;
 }
 
 export interface HomeRepositoryContract {
-    getPopularProducts: (limit: number, offset: number) => Promise<Product[]>
-    getNewestProducts: (limit: number, offset: number) => Promise<Product[]>
+  getPopularProducts: (limit: number, offset: number) => Promise<Product[]>;
+  getNewestProducts: (limit: number, offset: number) => Promise<Product[]>;
 }

@@ -14,7 +14,7 @@ const ShopRepository: ShopRepositoryContract = {
                         techInfoList: true
                     }
                 }
-            }
+            }   
         });
     },
 

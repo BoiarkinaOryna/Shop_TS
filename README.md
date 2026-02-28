@@ -168,6 +168,46 @@
   - **404** - Товар не знайдено. Тобто товару з таким ID не існує.
   - **500** - Невідома помилка сервера.
 
+ ### 3. **Головна сторінка** : Головнаа сторінка з популярними або новими товарам `/products/suggestions`
+  - Для цього Endpoint застосовується get запит.
+  - **type** - string - критерії сортування товарів:
+  1. **popular** (Отримання товару за кількість зкамовлень у нього )
+  2. **new** - bolean(True, Folse) - Отримаання товару за час його існування 
+  - **limit** - number(1) - Кількість товарів 
+  - **offset** - number(2) - Пагінація 
+  - **200** - Надіслано популярні або нові товари.
+  ```ts
+  [
+    {
+      id: number;
+      title: string;
+      price: number;
+      imageId: number | null;
+      discount: string | null;
+      shortDescription: string | null
+    }
+  ]
+  ```
+  ### Приклад
+  ```ts
+  [
+    {
+      id: 1;
+      title: "DJI Mini 4K";
+      price: 29 900;
+      imageId: 1;
+      discount: "25%";
+      shortDescription: "Дрон супер";
+    }
+  ]
+  ```
+  - **400** - Некоректний запит. Якщо замість типу у query parameter передано незрозумілі коду символи чи їх комбінації.
+  - **404** - Товари не знайдено.
+  - **500** - Невідома помилка сервера.
+
+
+
+
 
 ## Ендпоінти користувача
 
@@ -225,7 +265,7 @@
   #### Наприклад
   ```ts
   {
-    email:"123q@gmail.com";
+    email: "123q@gmail.com";
   }
   ```
   - **200** - Успішно надісло валідні дані і користувач має отримати лист з посиланням на сторінку зміни пароля.
@@ -239,13 +279,15 @@
   - #### Відсилаємо ми об'єкт з новим паролем:
   ```ts
   {
-    password: string
+    password: string,
+    email: string
   }
   ```
   #### Наприклад
   ```ts
   {
-    password:"Lebronjames1991"
+    password: "Lebronjames1991"
+    email: "123q@gmail.com"
   }
   ```
   - Пароль користувача використовуеться для авторизації та захисту його облікового запису
@@ -266,7 +308,7 @@
     name: string;
     email: string;
     surname: string;
-    patromymic: string;
+    patronymic: string;
     avatar: string | null;
   }
   ```
@@ -275,7 +317,7 @@
   {
     surname: "Скрипник";
     name: "Микола";
-    patromymic: "Батькович";
+    patronymic: "Батькович";
     number: "097 756 7852";
     email: "DJI@gmail.com";
     avatar: "coolavatar.png";
@@ -291,22 +333,20 @@
   #### Оновлені контактні дані користувача
   ```ts
   {
-    id: number;
     number?: string | null;
     name?: string;
     email?: string;
     surname?: string;
-    patromymic?: string;
+    patronymic?: string;
     avatar?: string | null;
   }
   ``` 
   #### Наприклад
   ```ts
   {
-    id: 2;
-    surname: "Крипник";
+    surname: "Скрипник";
     name: "Микола";
-    patromymic: "Батькович";
+    patronymic: "Батькович";
     email: "DJI007@gmail.com";
   }
   ```
@@ -349,7 +389,7 @@
       sum: 56707;
       delivery: "Оформлено";
       comment: "Коментар до замовлення";
-      payment: "Карткою онлайн";
+      payment: "Оформлено";
       userName: "Микола";
       userSurname: "Скрипник";
       userPatronymic: "Батькович";
@@ -384,28 +424,32 @@
   - **204** - Адреса користувача отримано успішно.
   #### Адреса
   ```ts
-  {
-    id: number;
-    country: string;
-    city: string;
-    street: string;
-    house: string;
-    entrance: number | null;
-    flatNumber: number | null;
-  }
+  [
+    {
+      id: number;
+      country: string;
+      city: string;
+      street: string;
+      house: string;
+      entrance: number | null;
+      flatNumber: number | null;
+    }
+  ]
   ```
  
   #### Наприклад
   ```ts
-  {
-    id: 2;
-    country: "Ukraine";
-    city: "Dnipro"
-    street: "Вул Маршала Малиновського 114 ";
-    house: 114 ;
-    flatNumber: 23;
-    entrance: 3;
-  }
+  [
+    {
+      id: 2;
+      country: "Ukraine";
+      city: "Dnipro";
+      street: "Вул Маршала Малиновського 114 ";
+      house: 114 ;
+      flatNumber: 23;
+      entrance: 3;
+    }
+  ]
   ```
   - **404** - Дані не знайдено.
   - **500** - Невідома помилка сервера.
@@ -429,7 +473,7 @@
   ```ts
   {
     id: 2;
-    city: "Lviv"
+    city: "Lviv";
     flatNumber: 28;
     entrance: 6;
   }
@@ -457,9 +501,9 @@
   ```ts
   {
     country: "Ukraine";
-    city: "Dnipro"
+    city: "Dnipro";
     street: "Вул Маршала Малиновського 114 ";
-    house: 114 ;
+    house: "114" ;
     flatNumber: 23;
     entrance: 3;
   }
@@ -477,6 +521,13 @@
     content: string
   }
   ```
+  #### Наприклад
+  ```ts
+  {
+    userEmail: "DJI@gmail.com",
+    content: "Гарний сайт"
+  }
+  ```
   - **200** - Повідомлення успішно надіслано. Повертаємо рядок з повідомленням про успішне виконання.
   - **400** - Неправильна структура запиту.
   - **500** - Невідома помилка сервера. 
@@ -485,4 +536,4 @@
 ## Стиль написання коду
 Увесь код структуровано за модулями з чіткими та зрозумілими назвами.  
 Файли називаються через крапку та формуються з маленької літери.  
-Модулі повинні називатися з великої літери.4
+Модулі повинні називатися з великої літери.
